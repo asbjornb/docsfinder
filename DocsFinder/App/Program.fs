@@ -2,7 +2,7 @@
 open System
 
 //List folders
-let getFolders = Directory.EnumerateDirectories "C:\\code"
+let getFolders = Directory.EnumerateDirectories
 
 //Check for readme
 let checkForReadme folder = 
@@ -17,7 +17,12 @@ let checkReadmeAge folder =
     (folder, (now - lastWriteTime).TotalDays)
 
 [<EntryPoint>]
-let main argv = 
+let main argv =
+    // Get optional path positional argument
+    let path = 
+        if argv.Length > 0 then argv.[0]
+        else Environment.CurrentDirectory
+    
     //Get folders, then check for readme and print results
-    getFolders |> Seq.map checkForReadme |> Seq.iter (printfn "%A")
+    getFolders path |> Seq.map checkForReadme |> Seq.iter (printfn "%A")
     0 // return 0 exit code for success
