@@ -23,5 +23,7 @@ let parseArgs(args: string[]) =
 [<EntryPoint>]
 let main args =
     let options = parseArgs args
-    getFolders options.path |> Seq.map checkForReadme |> Seq.iter (printfn "%A")
+    let filter (_, exists) = options.skipMissing=IncludeMissing || exists
+    //getFolders at path, check if they have readme with checkForReadme, print results.
+    getFolders options.path |> Seq.map checkForReadme |> Seq.filter filter |> Seq.iter (printfn "%A")
     0 // return 0 exit code for success
