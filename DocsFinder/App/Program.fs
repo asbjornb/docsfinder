@@ -26,7 +26,10 @@ let parseArgs (args: string list) =
 [<EntryPoint>]
 let main args =
     let options = parseArgs (args |> Array.toList)
+    //filter on exists if skipmissing is set
     let filter (_, exists) = options.skipMissing=IncludeMissing || exists
-    //getFolders at path, check if they have readme with checkForReadme, print results.
-    getFolders options.path |> Seq.map checkForReadme |> Seq.filter filter |> Seq.iter (printfn "%A")
+    //Format output to string and reverse parameters
+    let format (folder, exists) = sprintf "%b %s" exists folder
+    //getFolders at path, check if they have readme with checkForReadme, format, then print results
+    getFolders options.path |> Seq.map checkForReadme |> Seq.filter filter |> Seq.map format |> Seq.iter (printfn "%A")
     0 // return 0 exit code for success
